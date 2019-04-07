@@ -2,9 +2,23 @@
 
 // load modules
 const express = require('express');
+const bodyParser = require('body-parser');
 const morgan = require('morgan');
+const mongoose = require('mongoose');
 
 const app = express();
+
+// mongodb connection
+mongoose.connect("mongodb://localhost:27017/bookworm");
+var db = mongoose.connection;
+// display message if mongodb connection error
+db.on('error', console.error.bind(console, 'connection error'));
+// open mongo connection, display message on mongodb success
+db.once("open", function(){
+	console.log("db connection successful");
+});
+
+
 
 // set our port
 app.set('port', process.env.PORT || 5000);
