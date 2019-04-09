@@ -2,6 +2,8 @@
 
 var mongoose = require('mongoose');
 
+var Schema = mongoose.Schema;
+
 var UserSchema = new mongoose.Schema({
   fullName: {
     type: String,
@@ -16,6 +18,7 @@ var UserSchema = new mongoose.Schema({
     required: true
   }
 });
+
 var User = mongoose.model('User', UserSchema);
 
-module.exports = User;
+module.exports.User = User;

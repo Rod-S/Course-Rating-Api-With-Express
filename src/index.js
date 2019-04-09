@@ -19,7 +19,6 @@ db.once("open", function(){
 });
 
 
-
 // set our port
 app.set('port', process.env.PORT || 5000);
 
@@ -34,6 +33,9 @@ app.get('/', (req, res) => {
     message: 'Welcome to the Course Review API'
   });
 });
+
+var routes = require('./routes/index')
+app.use('api', routes);
 
 // uncomment this route in order to test the global error handler
 // app.get('/error', function (req, res) {
