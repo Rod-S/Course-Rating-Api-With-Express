@@ -1,13 +1,41 @@
 'use strict';
 
-var User = require('./user').User;
-
 var mongoose = require("mongoose");
 
 var Schema = mongoose.Schema;
 
+var UserSchema = new Schema({
+  fullName: {
+    type: String,
+    required: true
+  },
+  emailAddress: {
+    type: String,
+    required: true
+  },
+  password: {
+    type: String,
+    required: true
+  }
+});
+
+var ReviewSchema = new Schema({
+  user: [UserSchema],
+  postedOn: {
+    type: Date,
+    default: Date.now
+  },
+  rating: {
+    type: Number,
+    required: true
+  },
+  review: {
+    type: String
+  }
+});
+
 var CourseSchema = new Schema({
-  user: [User],
+  user: [UserSchema],
   title: {
     type: String,
     required: true
@@ -41,11 +69,13 @@ var CourseSchema = new Schema({
       }
     }
   ],
-  {
-    reviews: [Review]
-  }
+    reviews: [ReviewSchema]
+
 });
 
-var Course = mongoose.module('Course', CourseSchema);
+
+
+
+var Course = mongoose.model('Course', CourseSchema);
 
 module.exports.Course = Course;

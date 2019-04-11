@@ -6,7 +6,7 @@ var mongoose = require("mongoose");
 
 var Schema = mongoose.Schema;
 
-var ReviewSchema = new mongoose.Schema({
+var ReviewSchema = new Schema({
   user: [User],
   postedOn: {
     type: Date,

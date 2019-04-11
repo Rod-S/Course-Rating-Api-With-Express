@@ -1,8 +1,8 @@
+'use strict';
+
 const express = require('express');
 const router = express.Router();
-const User = require('../models/user');
-const Review = require('../models/review');
-const Course = require('../models/course');
+const Course = require('../models/models');
 
 //GET /api/users 200
 /*
@@ -19,7 +19,6 @@ router.get('/api/users', function(req, res, next) {
 });
 */
 
-router.get('api/users', function(req, res, next) {
-  console.log(User)
-
+router.get('/', function(req, res, next) {
+  console.log('hello');
 });

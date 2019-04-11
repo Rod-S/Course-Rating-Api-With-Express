@@ -5,6 +5,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
+var routes = require('./routes/index')
 
 const app = express();
 
@@ -34,8 +35,7 @@ app.get('/', (req, res) => {
   });
 });
 
-var routes = require('./routes/index')
-app.use('api', routes);
+app.use('/api', routes);
 
 // uncomment this route in order to test the global error handler
 // app.get('/error', function (req, res) {
