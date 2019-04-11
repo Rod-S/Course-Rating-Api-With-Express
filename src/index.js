@@ -26,6 +26,10 @@ app.set('port', process.env.PORT || 5000);
 // morgan gives us http request logging
 app.use(morgan('dev'));
 
+// parse incoming requests
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+
 // TODO add additional routes here
 
 // send a friendly greeting for the root route
@@ -36,6 +40,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api', routes);
+
 
 // uncomment this route in order to test the global error handler
 // app.get('/error', function (req, res) {
