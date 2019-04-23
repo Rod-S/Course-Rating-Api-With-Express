@@ -10,7 +10,7 @@ var routes = require('./routes/index')
 const app = express();
 
 // mongodb connection
-mongoose.connect("mongodb://localhost:27017/bookworm");
+mongoose.connect("mongodb://localhost:27017/course-api");
 var db = mongoose.connection;
 // display message if mongodb connection error
 db.on('error', console.error.bind(console, 'connection error'));
