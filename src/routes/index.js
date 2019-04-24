@@ -28,8 +28,7 @@ router.get('/courses', function(req, res, next) {
     Course.find({})
     .exec(function(err, courses) {
       if (err) return next(err);
-      courses.toObject({getters: true});
-      console.log(courses._id)
+      res.json(courses)
     });
 });
 
