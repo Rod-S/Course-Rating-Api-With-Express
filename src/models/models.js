@@ -5,7 +5,6 @@ var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
 var UserSchema = new Schema({
-  _id: Schema.Types.ObjectId,
   fullName: {
     type: String,
     required: true
@@ -21,7 +20,6 @@ var UserSchema = new Schema({
 });
 
 var ReviewSchema = new Schema({
-  _id: Schema.Types.ObjectId,
   user: [UserSchema],
   postedOn: {
     type: Date,

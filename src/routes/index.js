@@ -25,11 +25,20 @@ router.get('/users', function(req, res, next) {
 
 //POST /api/users 201
 router.post('/users', function(req, res, next) {
-  User.create(req.body)
-  .exec(function(err, user) {
-    if (err) return next(err);
-    res.redirect('/');
-  })
+  var promise = User.create(req.body);
+  promise
+  .then(
+    res.location('/')
+  )
+  .then(
+    res.status(201)
+  )
+  .then(
+    res.end()
+  )
+  .catch((err) => {
+    res.sendStatus(500);
+  });
 });
 
 //GET /api/courses 200
