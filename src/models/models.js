@@ -77,5 +77,9 @@ var CourseSchema = new Schema({
 
 
 var Course = mongoose.model('Course', CourseSchema);
+var User = mongoose.model('User', UserSchema);
+var Review = mongoose.model('Review', ReviewSchema);
 
 module.exports.Course = Course;
+module.exports.User = User;
+module.exports.Review = Review;

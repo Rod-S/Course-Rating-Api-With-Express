@@ -3,9 +3,11 @@
 // load modules
 const express = require('express');
 const bodyParser = require('body-parser');
+const jsonParser = require('body-parser').json;
 const morgan = require('morgan');
 const mongoose = require('mongoose');
-var routes = require('./routes/index')
+var routes = require('./routes/index');
+
 
 const app = express();
 
@@ -27,7 +29,7 @@ app.set('port', process.env.PORT || 5000);
 app.use(morgan('dev'));
 
 // parse incoming requests
-app.use(bodyParser.json());
+app.use(jsonParser());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // TODO add additional routes here
