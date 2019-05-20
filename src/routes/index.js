@@ -26,17 +26,13 @@ router.get('/users', function(req, res, next) {
 //POST /api/users 201
 router.post('/users', function(req, res, next) {
   var promise = User.create(req.body);
-  promise
-  .then(
+  promise.then(
     res.location('/')
-  )
-  .then(
+  ).then(
     res.status(201)
-  )
-  .then(
+  ).then(
     res.end()
-  )
-  .catch((err) => {
+  ).catch((err) => {
     res.sendStatus(500);
   });
 });
@@ -48,6 +44,20 @@ router.get('/courses', function(req, res, next) {
       if (err) return next(err);
       res.json(courses)
     });
+});
+
+//POST /api/courses 201
+router.post('/courses', function(req, res, next) {
+  var promise = Course.create(req.body);
+  promise.then(
+    res.location('/')
+  ).then(
+    res.status(201)
+  ).then(
+    res.end()
+  ).catch((err) => {
+    res.sendStatus(500);
+  });
 });
 
 //GET /api/courses/:courseID 200
