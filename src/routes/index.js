@@ -18,8 +18,17 @@ router.get('/', function(req, res, next) {
 router.get('/users', function(req, res, next) {
   User.find({})
   .exec(function(err, users) {
-    if (err) return next(error);
+    if (err) return next(err);
       res.json(users);
+  })
+});
+
+//POST /api/users 201
+router.post('/users', function(req, res, next) {
+  User.create(req.body)
+  .exec(function(err, user) {
+    if (err) return next(err);
+    res.redirect('/');
   })
 });
 
@@ -30,6 +39,15 @@ router.get('/courses', function(req, res, next) {
       if (err) return next(err);
       res.json(courses)
     });
+});
+
+//GET /api/courses/:courseID 200
+router.get('/courses/:courseId', function(req, res, next) {
+  Course.findById(req.params.courseId)
+  .exec(function (err, course) {
+    if (err) return next(err);
+    res.json(course);
+  });
 });
 
 module.exports = router;

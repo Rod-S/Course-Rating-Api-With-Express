@@ -5,6 +5,7 @@ var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
 var UserSchema = new Schema({
+  _id: Schema.Types.ObjectId,
   fullName: {
     type: String,
     required: true
@@ -20,6 +21,7 @@ var UserSchema = new Schema({
 });
 
 var ReviewSchema = new Schema({
+  _id: Schema.Types.ObjectId,
   user: [UserSchema],
   postedOn: {
     type: Date,
@@ -35,7 +37,7 @@ var ReviewSchema = new Schema({
 });
 
 var CourseSchema = new Schema({
-  user: [UserSchema],
+  user: [{type: Schema.Types.ObjectId, ref: 'User'}],
   title: {
     type: String,
     required: true
@@ -69,7 +71,7 @@ var CourseSchema = new Schema({
       }
     }
   ],
-    reviews: [ReviewSchema]
+    reviews: [{type: Schema.Types.ObjectId, ref: 'Review'}]
 
 });
 
