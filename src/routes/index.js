@@ -46,6 +46,15 @@ router.get('/courses', function(req, res, next) {
     });
 });
 
+//GET /api/courses/:courseId 200
+router.get('/courses/:courseId', function(req, res, next) {
+  Course.findById(req.params.courseId)
+  .exec(function (err, course) {
+    if (err) return next(err);
+    res.json(course);
+  });
+});
+
 //POST /api/courses 201
 router.post('/courses', function(req, res, next) {
   var promise = Course.create(req.body);
@@ -60,12 +69,21 @@ router.post('/courses', function(req, res, next) {
   });
 });
 
-//GET /api/courses/:courseID 200
-router.get('/courses/:courseId', function(req, res, next) {
+//PUT /api/courses/:courseId 304
+router.put('/courses/:courseId', function(req, res, next) {
+  Course.findOneAndUpdate({"_id" : req.params.courseId}, req.body, function(err, course) {
+    res.status(204);
+    res.end();
+  });
+});
+
+
+//POST /api/courses/:courseId/reviews 201
+router.post('/courses/:courseId/reviews', function(req, res, next) {
   Course.findById(req.params.courseId)
   .exec(function (err, course) {
     if (err) return next(err);
-    res.json(course);
+    
   });
 });
 
