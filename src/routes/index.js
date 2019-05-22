@@ -24,16 +24,15 @@ router.get('/users', function(req, res, next) {
 });
 
 //POST /api/users 201
+
 router.post('/users', function(req, res, next) {
   var promise = User.create(req.body);
-  promise.then(
-    res.location('/')
-  ).then(
-    res.status(201)
-  ).then(
-    res.end()
-  ).catch((err) => {
-    res.sendStatus(500);
+  promise.then(() => {
+    res.location('/');
+    res.status(201);
+    res.end();
+  }).catch((err) => {
+    if (err) return next(err);
   });
 });
 
@@ -58,14 +57,12 @@ router.get('/courses/:courseId', function(req, res, next) {
 //POST /api/courses 201
 router.post('/courses', function(req, res, next) {
   var promise = Course.create(req.body);
-  promise.then(
-    res.location('/')
-  ).then(
-    res.status(201)
-  ).then(
-    res.end()
-  ).catch((err) => {
-    res.sendStatus(500);
+  promise.then(() => {
+    res.location('/');
+    res.status(201);
+    res.end();
+  }).catch((err) => {
+    if (err) return next(err);
   });
 });
 
@@ -77,13 +74,12 @@ router.put('/courses/:courseId', function(req, res, next) {
   });
 });
 
-
 //POST /api/courses/:courseId/reviews 201
 router.post('/courses/:courseId/reviews', function(req, res, next) {
   Course.findById(req.params.courseId)
   .exec(function (err, course) {
     if (err) return next(err);
-    
+    course.reviews
   });
 });
 

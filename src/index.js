@@ -56,13 +56,22 @@ app.use((req, res, next) => {
   })
 })
 
+// Mongoose ValidationError handler OR
 // global error handler
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(err.status || 500).json({
-    message: err.message,
-    error: {}
-  });
+	if (err.name == 'ValidationError') {
+		res.status(400).json({
+			message: err.message,
+			error: {},
+			status: res.statusCode
+		})
+	} else {
+  	res.status(err.status || 500).json({
+    	message: err.message,
+    	error: {}
+  	});
+	}
 });
 
 // start listening on our port

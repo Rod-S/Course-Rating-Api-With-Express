@@ -11,7 +11,8 @@ var UserSchema = new Schema({
   },
   emailAddress: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   password: {
     type: String,
@@ -20,14 +21,16 @@ var UserSchema = new Schema({
 });
 
 var ReviewSchema = new Schema({
-  user: [UserSchema],
+  user: [{type: Schema.Types.ObjectId, ref: 'User'}],
   postedOn: {
     type: Date,
     default: Date.now
   },
   rating: {
     type: Number,
-    required: true
+    required: true,
+    min: 1,
+    max: 5
   },
   review: {
     type: String
