@@ -69,6 +69,7 @@ router.post('/courses', function(req, res, next) {
 //PUT /api/courses/:courseId 304
 router.put('/courses/:courseId', function(req, res, next) {
   Course.findOneAndUpdate({"_id" : req.params.courseId}, req.body, function(err, course) {
+    if (err) return next(err);
     res.status(204);
     res.end();
   });
