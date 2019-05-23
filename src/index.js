@@ -21,7 +21,6 @@ db.once("open", function(){
 	console.log("db connection successful");
 });
 
-
 // set our port
 app.set('port', process.env.PORT || 5000);
 
@@ -42,7 +41,6 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api', routes);
-
 
 // uncomment this route in order to test the global error handler
 // app.get('/error', function (req, res) {

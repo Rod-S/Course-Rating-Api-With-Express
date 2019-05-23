@@ -1,6 +1,7 @@
 'use strict';
 
 var mongoose = require("mongoose");
+var uniqueValidator = require('mongoose-unique-validator');
 
 var Schema = mongoose.Schema;
 
@@ -12,7 +13,9 @@ var UserSchema = new Schema({
   emailAddress: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
+    match:
+/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
   },
   password: {
     type: String,
@@ -21,7 +24,10 @@ var UserSchema = new Schema({
 });
 
 var ReviewSchema = new Schema({
-  user: [{type: Schema.Types.ObjectId, ref: 'User'}],
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: 'User'
+  },
   postedOn: {
     type: Date,
     default: Date.now
@@ -38,7 +44,10 @@ var ReviewSchema = new Schema({
 });
 
 var CourseSchema = new Schema({
-  user: [{type: Schema.Types.ObjectId, ref: 'User'}],
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: 'User'
+  },
   title: {
     type: String,
     required: true
@@ -72,12 +81,16 @@ var CourseSchema = new Schema({
       }
     }
   ],
-    reviews: [{type: Schema.Types.ObjectId, ref: 'Review'}]
-
+    reviews: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Review'
+      }
+    ]
 });
 
 
-
+UserSchema.plugin(uniqueValidator, {message: 'is already taken.'});
 
 var Course = mongoose.model('Course', CourseSchema);
 var User = mongoose.model('User', UserSchema);

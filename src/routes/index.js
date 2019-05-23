@@ -6,7 +6,6 @@ const Course = require('../models/models').Course;
 const User = require('../models/models').User;
 const Review = require('../models/models').Review;
 
-
 //GET /api/ 200
 router.get('/', function(req, res, next) {
   res.json({
