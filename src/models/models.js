@@ -2,6 +2,7 @@
 
 var mongoose = require("mongoose");
 var uniqueValidator = require('mongoose-unique-validator');
+const bcrypt = require('bcrypt');
 
 var Schema = mongoose.Schema;
 
@@ -89,8 +90,38 @@ var CourseSchema = new Schema({
     ]
 });
 
+UserSchema.statics.authenticate = function(email, password, callback) {
+  User.findOne({ email: email })
+      .exec(function (error, user) {
+        if (error) {
+          return callback(error);
+        } else if ( !user ) {
+          var err = new Error('User not found.');
+          err.status = 401;
+          return callback(err);
+        }
+        bcrypt.compare(password, user.password, function(error, result) {
+          if (result === true) {
+            return callback(null, user);
+          } else {
+            return callback();
+          }
+        })
+      });
+}
 
 UserSchema.plugin(uniqueValidator, {message: 'is already taken.'});
+
+//pre save hook for only new user entry in database
+//consider post save hook to recursively hash existing plaintext passwords in db?
+UserSchema.pre('save', function(next) {
+  var user = this;
+  bcrypt.hash(user.password, 10, function(err, hash) {
+    if (err) return next(err);
+    user.password = hash;
+    next();
+  })
+});
 
 var Course = mongoose.model('Course', CourseSchema);
 var User = mongoose.model('User', UserSchema);
