@@ -90,9 +90,11 @@ var CourseSchema = new Schema({
     ]
 });
 
-UserSchema.statics.authenticate = function(email, password, callback) {
-  User.findOne({ email: email })
+UserSchema.statics.authenticate = function(emailAddress, password, callback) {
+  User.findOne({ emailAddress: emailAddress })
       .exec(function (error, user) {
+        console.log('authenticate static error ' + error);
+        console.log('authenticate static user ' + user);
         if (error) {
           return callback(error);
         } else if ( !user ) {
@@ -107,7 +109,7 @@ UserSchema.statics.authenticate = function(email, password, callback) {
             return callback();
           }
         })
-      });
+  });
 }
 
 UserSchema.plugin(uniqueValidator, {message: 'is already taken.'});

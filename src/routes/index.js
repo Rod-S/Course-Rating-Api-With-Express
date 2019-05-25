@@ -26,28 +26,28 @@ router.get('/users', function(req, res, next) {
 });
 */
 
-router.get('/users', function (req, res, next) {
+router.get('/users', function(req, res, next) {
   var credentials = auth.parse(req.headers.authorization);
-  var email = credentials.name;
+  var emailAddress = credentials.name;
   var password = credentials.pass;
-  if (email && password) {
-  User.authenticate(email, password, function (error, user) {
-    console.log(email);
-    console.log(password);
-    console.log(user);
-    if (error || !user) {
-      var err = new Error ('Wrong email or password.');
-      err.status = 401;
-      return next(err);
-    } else {
-        return user;
-    }
-  });
-    } else {
-      var err = new Error('Email and password are required.');
-      err.status = 401;
-      return next(err);
-    }
+  console.log('credentials: ' + emailAddress + ' ' + password);
+  if (emailAddress && password) {
+    User.authenticate(emailAddress, password, function(error, user) {
+      console.log('error ' + error);
+      console.log('user ' + user);
+      if (error || !user) {
+        var err = new Error ('Wrong email or password.');
+        err.status = 401;
+        return next(err);
+      } else {
+          return res.json({user});
+      }
+    });
+  } else {
+    var err = new Error('Email and password are required.');
+    err.status = 401;
+    return next(err);
+  }
 });
 
 /*
