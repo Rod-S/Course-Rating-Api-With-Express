@@ -92,9 +92,11 @@ var CourseSchema = new Schema({
 
 UserSchema.statics.authenticate = function(emailAddress, password, callback) {
   User.findOne({ emailAddress: emailAddress })
-      .exec(function (error, user) {
+      .exec(function (user, error) {
         console.log('authenticate static error ' + error);
         console.log('authenticate static user ' + user);
+        console.log('authenticate static emailAddress ' + emailAddress);
+        console.log('authenticate static password ' + password);
         if (error) {
           return callback(error);
         } else if ( !user ) {
@@ -102,13 +104,20 @@ UserSchema.statics.authenticate = function(emailAddress, password, callback) {
           err.status = 401;
           return callback(err);
         }
+
+        if (password == user.password) {
+          return callback(user);
+        }
+
+        /*
         bcrypt.compare(password, user.password, function(error, result) {
           if (result === true) {
             return callback(null, user);
           } else {
-            return callback();
+            return callback(error);
           }
         })
+        */
   });
 }
 

@@ -28,11 +28,13 @@ router.get('/users', function(req, res, next) {
 
 router.get('/users', function(req, res, next) {
   var credentials = auth.parse(req.headers.authorization);
-  var emailAddress = credentials.name;
-  var password = credentials.pass;
-  console.log('credentials: ' + emailAddress + ' ' + password);
-  if (emailAddress && password) {
-    User.authenticate(emailAddress, password, function(error, user) {
+  var email = credentials.name;
+  var pass = credentials.pass;
+  console.log('credentials: ' + email + ' ' + pass);
+  if (email && pass) {
+    User.authenticate(email, pass, function(user, error) {
+      console.log('email: ' + email);
+      console.log('pass: ' + pass);
       console.log('error ' + error);
       console.log('user ' + user);
       if (error || !user) {
@@ -42,6 +44,7 @@ router.get('/users', function(req, res, next) {
       } else {
           return res.json({user});
       }
+      return res.json({user});
     });
   } else {
     var err = new Error('Email and password are required.');
@@ -100,7 +103,8 @@ router.post('/courses', function(req, res, next) {
 
 //PUT /api/courses/:courseId 304
 router.put('/courses/:courseId', function(req, res, next) {
-  Course.findOneAndUpdate({"_id" : req.params.courseId}, req.body, function(err, course) {
+  Course.findOneAndUpdate(
+    {"_id" : req.params.courseId}, req.body, function(err, course) {
     if (err) return next(err);
     res.status(204);
     res.end();
