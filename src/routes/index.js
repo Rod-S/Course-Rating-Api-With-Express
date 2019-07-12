@@ -7,6 +7,7 @@ const User = require('../models/models').User;
 const Review = require('../models/models').Review;
 
 const auth = require('basic-auth');
+const mid = require('../middleware');
 
 //GET /api/ 200
 router.get('/', function(req, res, next) {
@@ -16,27 +17,19 @@ router.get('/', function(req, res, next) {
 });
 
 //GET /api/users 200
-/*
-router.get('/users', function(req, res, next) {
-  User.find({})
-  .exec(function(err, users) {
-    if (err) return next(err);
-      res.json(users);
-  })
-});
-*/
-
-router.get('/users', function(req, res, next) {
+router.get('/users', mid.authCredentials, function(req, res, next) {
+  /*
+  if (!req.headers.authorization) {
+    var err = new Error('You must be logged in to view this page.');
+    err.status = 401;
+    return next(err);
+  }
   var credentials = auth.parse(req.headers.authorization);
   var email = credentials.name;
   var pass = credentials.pass;
-  console.log('credentials: ' + email + ' ' + pass);
-  if (email && pass) {
+  */
+  if (credentials) {
     User.authenticate(email, pass, function(user, error) {
-      console.log('email: ' + email);
-      console.log('pass: ' + pass);
-      console.log('error ' + error);
-      console.log('user ' + user);
       if (error || !user) {
         var err = new Error ('Wrong email or password.');
         err.status = 401;
@@ -44,7 +37,6 @@ router.get('/users', function(req, res, next) {
       } else {
           return res.json({user});
       }
-      return res.json({user});
     });
   } else {
     var err = new Error('Email and password are required.');
@@ -52,12 +44,6 @@ router.get('/users', function(req, res, next) {
     return next(err);
   }
 });
-
-/*
-router.get('/users', function(req, res, next) {
-  res.json(auth.parse(req.headers.authorization));
-});
-*/
 
 //POST /api/users 201
 router.post('/users', function(req, res, next) {
@@ -104,7 +90,7 @@ router.post('/courses', function(req, res, next) {
 //PUT /api/courses/:courseId 304
 router.put('/courses/:courseId', function(req, res, next) {
   Course.findOneAndUpdate(
-    {"_id" : req.params.courseId}, req.body, function(err, course) {
+    {"_id" : req.params.courseId}, req.body, {upsert: true}, function(err, course) {
     if (err) return next(err);
     res.status(204);
     res.end();
@@ -116,7 +102,10 @@ router.post('/courses/:courseId/reviews', function(req, res, next) {
   Course.findById(req.params.courseId)
   .exec(function (err, course) {
     if (err) return next(err);
-    course.reviews
+    Review.create(req.body);
+    res.location('/' +req.params.courseId);
+    res.status(201);
+    res.end();
   });
 });
 
