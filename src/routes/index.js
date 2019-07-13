@@ -28,6 +28,10 @@ router.get('/users', mid.authCredentials, function(req, res, next) {
   var email = credentials.name;
   var pass = credentials.pass;
   */
+  console.log(res.locals);
+  var credentials = res.locals;
+  var email = credentials.name;
+  var pass = credentials.pass;
   if (credentials) {
     User.authenticate(email, pass, function(user, error) {
       if (error || !user) {

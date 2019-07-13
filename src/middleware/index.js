@@ -1,10 +1,9 @@
 const auth = require('basic-auth');
 
-const authCredentials = (req, res, next) => {
+function authCredentials(req, res, next){
   if (req.headers.authorization) {
     var credentials = auth.parse(req.headers.authorization);
-    req.email = credentials.name;
-    req.pass = credentials.pass;
+    res.locals = credentials;
     return next();
   } else {
     var err = new Error('You must be signed in to view this page.')
