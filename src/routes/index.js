@@ -18,21 +18,9 @@ router.get('/', function(req, res, next) {
 
 //GET /api/users 200
 router.get('/users', mid.authCredentials, function(req, res, next) {
-  /*
-  if (!req.headers.authorization) {
-    var err = new Error('You must be logged in to view this page.');
-    err.status = 401;
-    return next(err);
-  }
-  var credentials = auth.parse(req.headers.authorization);
-  var email = credentials.name;
-  var pass = credentials.pass;
-  */
-  console.log(res.locals);
-  var credentials = res.locals;
-  var email = credentials.name;
-  var pass = credentials.pass;
-  if (credentials) {
+  if (res.locals) {
+    var email = res.locals.name;
+    var pass = res.locals.pass;
     User.authenticate(email, pass, function(user, error) {
       if (error || !user) {
         var err = new Error ('Wrong email or password.');
@@ -80,7 +68,7 @@ router.get('/courses/:courseId', function(req, res, next) {
 });
 
 //POST /api/courses 201
-router.post('/courses', function(req, res, next) {
+router.post('/courses', mid.authCredentials, function(req, res, next) {
   var promise = Course.create(req.body);
   promise.then(() => {
     res.location('/');
@@ -92,7 +80,7 @@ router.post('/courses', function(req, res, next) {
 });
 
 //PUT /api/courses/:courseId 304
-router.put('/courses/:courseId', function(req, res, next) {
+router.put('/courses/:courseId', mid.authCredentials, function(req, res, next) {
   Course.findOneAndUpdate(
     {"_id" : req.params.courseId}, req.body, {upsert: true}, function(err, course) {
     if (err) return next(err);
@@ -102,7 +90,7 @@ router.put('/courses/:courseId', function(req, res, next) {
 });
 
 //POST /api/courses/:courseId/reviews 201
-router.post('/courses/:courseId/reviews', function(req, res, next) {
+router.post('/courses/:courseId/reviews', mid.authCredentials, function(req, res, next) {
   Course.findById(req.params.courseId)
   .exec(function (err, course) {
     if (err) return next(err);

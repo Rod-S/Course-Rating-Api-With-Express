@@ -90,8 +90,8 @@ var CourseSchema = new Schema({
     ]
 });
 
-UserSchema.statics.authenticate = function(emailAddress, password, callback) {
-  User.findOne({ emailAddress: emailAddress })
+UserSchema.statics.authenticate = function(email, pass, callback) {
+  User.findOne({ emailAddress: email })
       .exec(function (user, error) {
         if (error) {
           return callback(error);
@@ -100,8 +100,9 @@ UserSchema.statics.authenticate = function(emailAddress, password, callback) {
           err.status = 401;
           return callback(err);
         }
-        bcrypt.compare(password, user.password, function(error, result) {
+        bcrypt.compare(pass, user.password, function(error, result) {
           if (result === true) {
+            req.user = user;
             return callback(null, user);
           } else {
             return callback(error);
