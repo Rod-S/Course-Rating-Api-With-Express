@@ -18,18 +18,8 @@ router.get('/', function(req, res, next) {
 
 //GET /api/users 200
 router.get('/users', mid.authCredentials, function(req, res, next) {
-  if (res.locals) {
-    var email = res.locals.name;
-    var pass = res.locals.pass;
-    User.authenticate(email, pass, function(user, error) {
-      if (error || !user) {
-        var err = new Error ('Wrong email or password.');
-        err.status = 401;
-        return next(err);
-      } else {
-          return res.json({user});
-      }
-    });
+  if (req) {
+    res.json(req.user);
   } else {
     var err = new Error('Email and password are required.');
     err.status = 401;
@@ -69,28 +59,41 @@ router.get('/courses/:courseId', function(req, res, next) {
 
 //POST /api/courses 201
 router.post('/courses', mid.authCredentials, function(req, res, next) {
-  var promise = Course.create(req.body);
-  promise.then(() => {
+  if (req) {
+    var promise = Course.create(req.body);
+    promise.then(() => {
     res.location('/');
     res.status(201);
     res.end();
   }).catch((err) => {
     if (err) return next(err);
   });
+} else {
+  var err = new Error('Email and password are required.');
+  err.status = 401;
+  return next(err);
+}
 });
 
 //PUT /api/courses/:courseId 304
 router.put('/courses/:courseId', mid.authCredentials, function(req, res, next) {
+  if (req) {
   Course.findOneAndUpdate(
     {"_id" : req.params.courseId}, req.body, {upsert: true}, function(err, course) {
     if (err) return next(err);
     res.status(204);
     res.end();
   });
+} else {
+    var err = new Error('Email and password are required.');
+    err.status = 401;
+    return next(err);
+  }
 });
 
 //POST /api/courses/:courseId/reviews 201
 router.post('/courses/:courseId/reviews', mid.authCredentials, function(req, res, next) {
+  if (req) {
   Course.findById(req.params.courseId)
   .exec(function (err, course) {
     if (err) return next(err);
@@ -99,6 +102,11 @@ router.post('/courses/:courseId/reviews', mid.authCredentials, function(req, res
     res.status(201);
     res.end();
   });
+} else {
+  var err = new Error('Email and password are required.');
+  err.status = 401;
+  return next(err);
+}
 });
 
 module.exports = router;
