@@ -4,6 +4,12 @@ var mongoose = require("mongoose");
 var uniqueValidator = require('mongoose-unique-validator');
 const bcrypt = require('bcrypt');
 
+function validator (val) {
+  return val == 'something';
+}
+
+var custom = [validator, 'Uh oh, {PATH} does not equal "something".']
+
 var Schema = mongoose.Schema;
 
 var UserSchema = new Schema({
@@ -27,7 +33,8 @@ var UserSchema = new Schema({
 var ReviewSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
-    ref: 'User'
+    ref: 'User',
+    validate: custom
   },
   postedOn: {
     type: Date,
