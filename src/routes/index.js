@@ -50,7 +50,9 @@ router.get('/courses', function(req, res, next) {
 
 //GET /api/courses/:courseId 200
 router.get('/courses/:courseId', function(req, res, next) {
-  Course.findById(req.params.courseId).populate('user reviews').populate('user','fullName')
+  Course.findById(req.params.courseId)
+  .populate({path: 'reviews', model: 'Review', populate: {path: 'user fullName', model: 'User', select: 'fullName'}})
+  .populate('user','fullName')
   .exec(function (err, course) {
     if (err) return next(err);
     res.json(course);
