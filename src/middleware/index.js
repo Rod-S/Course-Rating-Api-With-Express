@@ -10,6 +10,7 @@ function authCredentials(req, res, next){
         err.status = 401;
         return next(err);
       } else {
+        console.log('user authenticated.');
         req.user = user;
         return next();
       }

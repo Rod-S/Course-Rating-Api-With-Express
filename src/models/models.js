@@ -4,12 +4,6 @@ var mongoose = require("mongoose");
 var uniqueValidator = require('mongoose-unique-validator');
 const bcrypt = require('bcrypt');
 
-function validator (val) {
-  return val == 'something';
-}
-
-var custom = [validator, 'Uh oh, {PATH} does not equal "something".']
-
 var Schema = mongoose.Schema;
 
 var UserSchema = new Schema({
@@ -33,8 +27,7 @@ var UserSchema = new Schema({
 var ReviewSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
-    validate: custom
+    ref: 'User'
   },
   postedOn: {
     type: Date,
@@ -116,6 +109,23 @@ UserSchema.statics.authenticate = function(email, pass, callback) {
           }
         })
       });
+}
+
+ReviewSchema.statics.validate = function(review_userID, course_userID, callback) {
+  console.log('reviewSchema');
+  console.log(review_userID);
+  console.log(course_userID);
+  if ( mongoose.Types.ObjectId(`${review_userID}`).equals(mongoose.Types.ObjectId(`${course_userID}`))) {
+    var validID = false;
+    var err = new Error('You cannot review your own course.');
+    err.status = 401;
+    err.message = "reviewSchema.validate " + err;
+    return callback(err);
+  } else {
+      var validID = true;
+      console.log("reviewSchema.validate validID " + validID);
+      return callback(validID);
+  }
 }
 
 UserSchema.plugin(uniqueValidator, {message: 'is already taken.'});

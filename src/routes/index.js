@@ -93,16 +93,24 @@ router.put('/courses/:courseId', mid.authCredentials, function(req, res, next) {
   }
 });
 
-//POST /api/courses/:courseId/reviews 201
 router.post('/courses/:courseId/reviews', mid.authCredentials, function(req, res, next) {
   if (req) {
+  var review_userID = req.user._id;
   Course.findById(req.params.courseId)
   .exec(function (err, course) {
     if (err) return next(err);
-    Review.create(req.body);
-    res.location('/' +req.params.courseId);
-    res.status(201);
-    res.end();
+    var course_userID = course.user;
+    Review.validate(review_userID, course_userID, function(err, validID) {
+      if (validID == true) {
+       Review.create(req.body);
+       res.location('/' + req.params.courseId);
+       res.status(201);
+       res.end();
+      } else {
+        console.log(err);
+        return next(err);
+      }
+    });
   });
 } else {
   var err = new Error('Email and password are required.');
