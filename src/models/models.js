@@ -90,6 +90,7 @@ var CourseSchema = new Schema({
     ]
 });
 
+//authenticate method which takes an email and password and checks it against bcrypt hashed password in db
 UserSchema.statics.authenticate = function(email, pass, callback) {
   User.findOne({ emailAddress: email })
       .exec(function (user, error) {
@@ -109,8 +110,9 @@ UserSchema.statics.authenticate = function(email, pass, callback) {
           }
         })
       });
-}
+};
 
+//validate method which takes a reviewer user's ID and course's user ID and checks if they match
 ReviewSchema.statics.validate = function(review_userID, course_userID, callback) {
   console.log('reviewSchema');
   console.log(review_userID);
@@ -126,8 +128,9 @@ ReviewSchema.statics.validate = function(review_userID, course_userID, callback)
       console.log("reviewSchema.validate validID " + validID);
       return callback(validID);
   }
-}
+};
 
+//unique validation message on User emailAddress
 UserSchema.plugin(uniqueValidator, {message: 'is already taken.'});
 
 //pre save hook for only new user entry in database

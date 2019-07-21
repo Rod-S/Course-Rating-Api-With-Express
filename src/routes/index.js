@@ -1,5 +1,6 @@
 'use strict';
 
+//import modules/models
 const express = require('express');
 const router = express.Router();
 const Course = require('../models/models').Course;
@@ -93,6 +94,7 @@ router.put('/courses/:courseId', mid.authCredentials, function(req, res, next) {
   }
 });
 
+//POST /api/courses/:courseId/reviews 201
 router.post('/courses/:courseId/reviews', mid.authCredentials, function(req, res, next) {
   if (req) {
   var review_userID = req.user._id;

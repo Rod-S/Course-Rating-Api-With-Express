@@ -1,6 +1,10 @@
 const auth = require('basic-auth');
 const User = require('../models/models').User;
 
+
+/*middleware which parses authorization header and passes credentials
+into authenticate user static method and bcrypt pre-save hook validation.
+*/
 function authCredentials(req, res, next){
   if (req.headers.authorization) {
     var credentials = auth.parse(req.headers.authorization);

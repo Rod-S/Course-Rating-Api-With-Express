@@ -4,11 +4,9 @@ var server = require('../src/index.js');
 var should = chai.should();
 var expect = require('chai').expect;
 
-
 chai.use(chaiHttp);
 
 // Test suite
-
 
 describe('Mocha', function () {
   it('should run our tests using npm', function(){
