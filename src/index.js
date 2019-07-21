@@ -40,7 +40,7 @@ app.get('/', (req, res) => {
   });
 });
 
-app.use('/api', routes);
+module.exports = app.use('/api', routes);
 
 // uncomment this route in order to test the global error handler
 // app.get('/error', function (req, res) {
@@ -76,3 +76,5 @@ app.use((err, req, res, next) => {
 const server = app.listen(app.get('port'), () => {
   console.log(`Express server is listening on port ${server.address().port}`);
 });
+
+module.exports = server;
