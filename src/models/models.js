@@ -7,6 +7,10 @@ const bcrypt = require('bcrypt');
 var Schema = mongoose.Schema;
 
 var UserSchema = new Schema({
+  _id: {
+    type: Schema.ObjectId,
+    auto: true
+  },
   fullName: {
     type: String,
     required: true
@@ -25,6 +29,10 @@ var UserSchema = new Schema({
 });
 
 var ReviewSchema = new Schema({
+  _id: {
+    type: Schema.ObjectId,
+    auto: true
+  },
   user: {
     type: Schema.Types.ObjectId,
     ref: 'User'
@@ -35,7 +43,6 @@ var ReviewSchema = new Schema({
   },
   rating: {
     type: Number,
-    required: true,
     min: 1,
     max: 5
   },
@@ -45,6 +52,10 @@ var ReviewSchema = new Schema({
 });
 
 var CourseSchema = new Schema({
+  _id: {
+    type: Schema.ObjectId,
+    auto: true
+  },
   user: {
     type: Schema.Types.ObjectId,
     ref: 'User'
@@ -90,7 +101,7 @@ var CourseSchema = new Schema({
     ]
 });
 
-//authenticate method which takes an email and password and checks it against bcrypt hashed password in db
+//authenticate method which  compares a password to the hashed password stored on a user document instance
 UserSchema.statics.authenticate = function(email, pass, callback) {
   User.findOne({ emailAddress: email })
       .exec(function (user, error) {
@@ -112,7 +123,7 @@ UserSchema.statics.authenticate = function(email, pass, callback) {
       });
 };
 
-//validate method which takes a reviewer user's ID and course's user ID and checks if they match
+//validate method which prevents a user from reviewing their own course
 ReviewSchema.statics.validate = function(review_userID, course_userID, callback) {
   console.log('reviewSchema');
   console.log(review_userID);
@@ -133,8 +144,8 @@ ReviewSchema.statics.validate = function(review_userID, course_userID, callback)
 //unique validation message on User emailAddress
 UserSchema.plugin(uniqueValidator, {message: 'is already taken.'});
 
-//pre save hook for only new user entry in database
-//consider post save hook to recursively hash existing plaintext passwords in db?
+//pre save hook for only new user entry in database which encrypts the password property before saving it to the database
+//[test]consider post save hook to recursively hash existing plaintext passwords in db?
 UserSchema.pre('save', function(next) {
   var user = this;
   bcrypt.hash(user.password, 10, function(err, hash) {
