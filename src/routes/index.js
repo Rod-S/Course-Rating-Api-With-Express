@@ -8,7 +8,7 @@ const User = require('../models/models').User;
 const Review = require('../models/models').Review;
 
 const auth = require('basic-auth');
-const mid = require('../middleware');
+let mid = require('../middleware');
 
 //GET /api/ 200
 router.get('/', function(req, res, next) {
@@ -22,7 +22,7 @@ router.get('/users', mid.authCredentials, function(req, res, next) {
   if (req) {
     res.json(req.user);
   } else {
-    var err = new Error('Email and password are required.');
+    let err = new Error('Email and password are required.');
     err.status = 401;
     return next(err);
   }
@@ -30,7 +30,7 @@ router.get('/users', mid.authCredentials, function(req, res, next) {
 
 //POST /api/users 201
 router.post('/users', function(req, res, next) {
-  var promise = User.create(req.body);
+  let promise = User.create(req.body);
   promise.then(() => {
     res.location('/');
     res.status(201);
@@ -63,7 +63,7 @@ router.get('/courses/:courseId', function(req, res, next) {
 //POST /api/courses 201
 router.post('/courses', mid.authCredentials, function(req, res, next) {
   if (req) {
-    var promise = Course.create(req.body);
+    let promise = Course.create(req.body);
     promise.then(() => {
     res.location('/');
     res.status(201);
@@ -72,7 +72,7 @@ router.post('/courses', mid.authCredentials, function(req, res, next) {
     if (err) return next(err);
   });
 } else {
-  var err = new Error('Email and password are required.');
+  let err = new Error('Email and password are required.');
   err.status = 401;
   return next(err);
 }
@@ -88,7 +88,7 @@ router.put('/courses/:courseId', mid.authCredentials, function(req, res, next) {
     res.end();
   });
 } else {
-    var err = new Error('Email and password are required.');
+    let err = new Error('Email and password are required.');
     err.status = 401;
     return next(err);
   }
@@ -97,11 +97,11 @@ router.put('/courses/:courseId', mid.authCredentials, function(req, res, next) {
 //POST /api/courses/:courseId/reviews 201
 router.post('/courses/:courseId/reviews', mid.authCredentials, function(req, res, next) {
   if (req) {
-  var review_userID = req.user._id;
+  let review_userID = req.user._id;
   Course.findById(req.params.courseId)
   .exec(function (err, course) {
     if (err) return next(err);
-    var course_userID = course.user;
+    let course_userID = course.user;
     Review.validate(review_userID, course_userID, function(err, validID) {
       if (validID == true) {
        Review.create(req.body);
@@ -115,7 +115,7 @@ router.post('/courses/:courseId/reviews', mid.authCredentials, function(req, res
     });
   });
 } else {
-  var err = new Error('Email and password are required.');
+  let err = new Error('Email and password are required.');
   err.status = 401;
   return next(err);
 }

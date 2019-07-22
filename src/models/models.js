@@ -1,12 +1,12 @@
 'use strict';
 
-var mongoose = require("mongoose");
-var uniqueValidator = require('mongoose-unique-validator');
+const mongoose = require("mongoose");
+const uniqueValidator = require('mongoose-unique-validator');
 const bcrypt = require('bcrypt');
 
-var Schema = mongoose.Schema;
+const Schema = mongoose.Schema;
 
-var UserSchema = new Schema({
+const UserSchema = new Schema({
   _id: {
     type: Schema.ObjectId,
     auto: true
@@ -28,7 +28,7 @@ var UserSchema = new Schema({
   }
 });
 
-var ReviewSchema = new Schema({
+const ReviewSchema = new Schema({
   _id: {
     type: Schema.ObjectId,
     auto: true
@@ -51,7 +51,7 @@ var ReviewSchema = new Schema({
   }
 });
 
-var CourseSchema = new Schema({
+const CourseSchema = new Schema({
   _id: {
     type: Schema.ObjectId,
     auto: true
@@ -108,7 +108,7 @@ UserSchema.statics.authenticate = function(email, pass, callback) {
         if (error) {
           return callback(error);
         } else if ( !user ) {
-          var err = new Error('User not found.');
+          let err = new Error('User not found.');
           err.status = 401;
           return callback(err);
         }
@@ -129,13 +129,13 @@ ReviewSchema.statics.validate = function(review_userID, course_userID, callback)
   console.log(review_userID);
   console.log(course_userID);
   if ( mongoose.Types.ObjectId(`${review_userID}`).equals(mongoose.Types.ObjectId(`${course_userID}`))) {
-    var validID = false;
-    var err = new Error('You cannot review your own course.');
+    let validID = false;
+    let err = new Error('You cannot review your own course.');
     err.status = 401;
     err.message = "reviewSchema.validate " + err;
     return callback(err);
   } else {
-      var validID = true;
+      let validID = true;
       console.log("reviewSchema.validate validID " + validID);
       return callback(validID);
   }
@@ -147,7 +147,7 @@ UserSchema.plugin(uniqueValidator, {message: 'is already taken.'});
 //pre save hook for only new user entry in database which encrypts the password property before saving it to the database
 //[test]consider post save hook to recursively hash existing plaintext passwords in db?
 UserSchema.pre('save', function(next) {
-  var user = this;
+  const user = this;
   bcrypt.hash(user.password, 10, function(err, hash) {
     if (err) return next(err);
     user.password = hash;
@@ -155,9 +155,9 @@ UserSchema.pre('save', function(next) {
   })
 });
 
-var Course = mongoose.model('Course', CourseSchema);
-var User = mongoose.model('User', UserSchema);
-var Review = mongoose.model('Review', ReviewSchema);
+const Course = mongoose.model('Course', CourseSchema);
+const User = mongoose.model('User', UserSchema);
+const Review = mongoose.model('Review', ReviewSchema);
 
 module.exports.Course = Course;
 module.exports.User = User;

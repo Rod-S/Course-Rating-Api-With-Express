@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 const jsonParser = require('body-parser').json;
 const morgan = require('morgan');
 const mongoose = require('mongoose');
-var routes = require('./routes/index');
+const routes = require('./routes/index');
 
 
 const app = express();
